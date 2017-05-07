@@ -1,0 +1,229 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+struct student
+{
+    char name [15];
+    float gpa;
+    struct student *next;
+    struct student *prev;
+};
+struct student *start=NULL;
+struct student *end=NULL;
+
+struct student* createstudent(void)
+{
+    struct student* temp;
+    temp=((struct student*)malloc(sizeof (struct student)));
+    if(!temp)
+    {
+        printf("\n no enough memory\n");
+    }
+    else
+    {return temp;}
+}
+
+void appendstudent(struct student* element)
+{
+    if (start==NULL)
+    {
+        start=element;
+        end=element;
+        element->next=NULL;
+        element->prev=NULL;
+    }
+    else
+    {
+        element->next=NULL;
+        element->prev=end;
+        end->next=element;
+        end=element;
+
+    }
+
+}
+void insertstudent(void)
+{
+    struct student* temp=start;
+    struct student * element;
+    element=createstudent();
+    printf("\nenter student name\n");
+    scanf("%s",element->name);
+    printf("enter student GPA\n");
+    scanf("%f",&element->gpa);
+    if ((start==NULL)||((element->gpa)<(end->gpa)))
+    {
+        appendstudent(element);
+    }
+    else if ((element->gpa)>(start->gpa))
+    {
+        start->prev=element;
+        element->next=start;
+        element->prev=NULL;
+        start=element;
+    }
+    else
+    {
+        while ((element->gpa)<(temp->gpa))
+        {
+            temp=temp->next;
+        }
+        element->next=temp;
+        element->prev=temp->prev;
+        temp->prev->next=element;
+        temp->prev=element;
+    }
+}
+struct student* searchstudent(void)
+{
+    struct student* temp;
+    temp=createstudent();
+    struct student* traverse;
+    if (!start)
+    {
+        printf("\n the list is empty\n");
+        return NULL;
+    }
+    else
+    {
+        printf("\n enter student name \n");
+        scanf("%s",temp->name);
+        traverse=start;
+        while (traverse)
+        {
+
+            if ((strcmp((temp->name),(traverse->name)))==0)
+            {
+                printf("student name is    %s\n",traverse->name);
+                printf("student GPA =%f",traverse->gpa);
+                return traverse;
+            }
+            else
+            {
+                traverse=traverse->next;
+            }
+        }
+        printf("\n student not found\n");
+    }
+    return NULL;
+}
+void deletestudent(void)
+{
+    struct student* element;
+    element=createstudent();
+    element=searchstudent();
+    if (element)
+    {
+        if ((element==start)&&(element==end))
+        {
+            start=NULL;
+            end=NULL;
+        }
+        else if (element==start)
+        {
+            start=start->next;
+            element->next->prev=NULL;
+        }
+        else if (element==end)
+        {
+            end=end->prev;
+            element->prev->next=NULL;
+        }
+        else
+        {
+            element->prev->next=element->next;
+            element->next->prev=element->prev;
+        }
+        free(element);
+    }
+    else;
+}
+
+void countstudent(void)
+{
+    int x=0;
+    struct student* temp;
+    if (!start)
+    {
+        printf("zero");
+    }
+    else
+    {
+        temp=start;
+        while (temp!=NULL)
+        {
+            temp=temp->next;
+            x++;
+        }
+        printf("\nThe number of students =%d\n", x);
+    }
+}
+void beststudent(void)
+{
+    if (start)
+    {
+        printf("%s\n",start->name);
+        printf("%f",start->gpa);
+    }
+    else
+    {
+        printf("the list is empty");
+    }
+}
+void PrintForward()
+{
+    struct student* temp;
+    temp=start;
+    while(temp != NULL)
+    {
+        printf("\n%s\n",temp->name);
+        printf("\n%f\n",temp->gpa);
+        temp=temp->next;
+    }
+}
+int main (void)
+{
+    char key=0;
+    do
+    {
+
+    printf("1_insert student\n");
+    printf("2_search student\n");
+    printf("3_delete student\n");
+    printf("4_count students\n");
+    printf("5_best student\n");
+    printf("6_print forward");
+    scanf("%d",&key);
+    if(key==1)
+    {
+        insertstudent();
+    }
+    else if(key==2)
+    {
+        searchstudent();
+    }
+    else if (key==3)
+    {
+        deletestudent();
+    }
+    else if(key==4)
+    {
+        countstudent();
+    }
+    else if(key==5)
+    {
+        beststudent();
+    }
+    else if (key==6)
+    {
+        PrintForward();
+    }
+    else;
+    }
+    while(key<=6);
+
+    return 0;
+}
+
+
